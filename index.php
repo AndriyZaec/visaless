@@ -44,9 +44,8 @@
 
 		foreach ($countriesRand as $randCountry){
 			$visa_groups = $client->doGetVisaGroups($citizenship, $randCountry->code, $citizenship);
-			foreach($visa_groups as $visa_group) {
 				try{
-					$visa_required = $client->doGetVisaRequired($citizenship, $randCountry->code, $citizenship, $visa_group->id, 'false');
+					$visa_required = $client->doGetVisaRequired($citizenship, $randCountry->code, $citizenship, 1, 'false');
 				}catch(Exception $e){
 					echo('Data not found');
 				}
@@ -56,9 +55,8 @@
  						$i++;
  					}
  					else{
- 						break(2);
+ 						break(1);
  					}
-				}
 			}
 		}
 		die();
