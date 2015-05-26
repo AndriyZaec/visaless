@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Visa-free countries{% endblock %}
+
+{% block content %}
+<p>Select citizenship</p>
+<form name='select' action="" method="post">
+	<select name="countries" id="countries">
+		{% for country in countries %}
+		<option>{{country.name}}</option>
+		{% endfor %}
+	</select>
+	<input type="button" id="check" name="check" value="OK"><br><br>
+	<img src="load.gif" alt="loader" id="loader">
+	<script type="text/javascript">
+		$( "#loader" ).hide();
+		$( "#check" ).click(function() {
+			$( "#loader" ).show();
+  			var a = $("#countries option:selected").text();
+  			$( "#citizens" ).html(a);
+			$.post("http://localhost/visaless-random_visa/index.php", { 'selected' : a }, function(data,status){ 
+			$( "#table" ).html(data);
+			$( "#loader" ).hide();})
+		});
+	</script>
+	</form>
+	<p>Countries that do not require visas for citizens of </p><p id='citizens'></p><hr>
+	<table border="1" style="solid">
+		<tbody id='table'>
+			
+		</tbody>
+	</table>
+</form>
+
+{% endblock %}
+
