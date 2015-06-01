@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<definitions name="VisaHQTravelService"
+				targetNamespace="urn:VisaHQTravelService"
+				xmlns:typens="urn:VisaHQTravelService"
+				xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+				xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+				xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+				xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+				xmlns="http://schemas.xmlsoap.org/wsdl/">
+	<types>
+		<xsd:schema targetNamespace="urn:VisaHQTravelService">
+			<xsd:simpleType name="TextType">
+				<xsd:restriction base="xsd:string">
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="CountryCodeType">
+				<xsd:restriction base="xsd:string">
+					<xsd:length value="2"/>
+					<xsd:pattern value="[a-zA-Z]{2}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="VisaGroupType">
+				<xsd:restriction base="xsd:integer">
+					<xsd:minInclusive value="1"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="PermResidentType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="true"/>
+					<xsd:enumeration value="false"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="PostalCodeType">
+				<xsd:restriction base="xsd:string">
+					<xsd:length value="2"/>
+					<xsd:pattern value="[a-zA-Z]{2}"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:simpleType name="AirportKeyType">
+				<xsd:restriction base="xsd:string">
+					<xsd:enumeration value="AIRPORT_CODE"/>
+					<xsd:enumeration value="AIRPORT_NAME"/>
+					<xsd:enumeration value="AIRPORT_CITY"/>
+                                        <xsd:enumeration value="COUNTRY_CODE"/>
+				</xsd:restriction>
+			</xsd:simpleType>
+			
+			<xsd:complexType name="CountryItemType">
+				<xsd:sequence>
+					<xsd:element name="code" type="typens:CountryCodeType"/>
+					<xsd:element name="name" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			
+			<xsd:complexType name="CountriesArrayType">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:CountryItemType[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+			<xsd:complexType name="VisaGroupItemType">
+				<xsd:all>
+					<xsd:element name="id" type="xsd:integer"/>
+					<xsd:element name="title" type="xsd:string"/>
+					<xsd:element name="text" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="VisaGroupsArrayType">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:VisaGroupItemType[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+			<xsd:complexType name="VisaRequirementItemType">
+				<xsd:all>
+					<xsd:element name="title" type="xsd:string"/>
+					<xsd:element name="text" type="xsd:string"/>
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="VisaRequirementsArrayType">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:VisaRequirementItemType[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+			<xsd:complexType name="VisaTypeItemType">
+				<xsd:all>
+					<xsd:element name="id" type="xsd:integer"/>
+					<xsd:element name="title" type="xsd:string"/>
+					<xsd:element name="upto" type="xsd:integer"/>
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="VisaTypesArrayType">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:VisaTypeItemType[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ProcessingTimeItemType">
+				<xsd:all>
+					<xsd:element name="id" type="xsd:integer"/>
+					<xsd:element name="title" type="xsd:string"/>
+					<xsd:element name="speed" type="xsd:integer"/>
+					<xsd:element name="fee" type="xsd:float"/>
+				</xsd:all>
+			</xsd:complexType>
+			
+			<xsd:complexType name="ProcessingTimesArrayType">
+				<xsd:complexContent>
+					<xsd:restriction base="soapenc:Array">
+						<xsd:attribute ref="soapenc:arrayType" wsdl:arrayType="typens:ProcessingTimeItemType[]"/>
+					</xsd:restriction>
+				</xsd:complexContent>
+			</xsd:complexType>
+			
+		</xsd:schema>
+	</types>
+	
+	<message name="doGetCountriesRequest">
+	</message>
+	
+	<message name="doGetCountriesResponse">
+		<part name="countries" type="typens:CountriesArrayType"/>
+	</message>
+	
+	<message name="doGetCountryRequest">
+		<part name="airport" type="xsd:string"/>
+		<part name="airportKey" type="typens:AirportKeyType"/>
+	</message>
+	
+	<message name="doGetCountryResponse">
+		<part name="countryCode" type="typens:CountryCodeType"/>
+                <part name="countryName" type="xsd:string"/>
+	</message>
+	
+	<message name="doGetVisaGroupsRequest">
+		<part name="residence" type="typens:CountryCodeType"/>
+		<part name="country" type="typens:CountryCodeType"/>
+		<part name="citizenship" type="typens:CountryCodeType"/>
+	</message>
+	
+	<message name="doGetVisaGroupsResponse">
+		<part name="visaGroups" type="typens:VisaGroupsArrayType"/>
+	</message>
+	
+	<message name="doGetNotRequiredInfoRequest">
+		<part name="residence" type="typens:CountryCodeType"/>
+		<part name="country" type="typens:CountryCodeType"/>
+		<part name="citizenship" type="typens:CountryCodeType"/>
+	</message>
+	
+	<message name="doGetNotRequiredInfoResponse">
+		<part name="visaNotRequiredInfo" type="typens:TextType"/>
+	</message>
+	
+	<message name="doGetVisaRequiredRequest">
+		<part name="residence" type="typens:CountryCodeType"/>
+		<part name="country" type="typens:CountryCodeType"/>
+		<part name="citizenship" type="typens:CountryCodeType"/>
+		<part name="visaGroup" type="typens:VisaGroupType"/>
+		<part name="permResident" type="typens:PermResidentType"/>
+		<part name="jurisdiction" type="typens:PostalCodeType"/>
+	</message>
+	
+	<message name="doGetVisaRequiredResponse">
+		<part name="visaRequired" type="xsd:boolean"/>
+	</message>
+	
+	<message name="doGetVisaRequirementsRequest">
+		<part name="residence" type="typens:CountryCodeType"/>
+		<part name="country" type="typens:CountryCodeType"/>
+		<part name="citizenship" type="typens:CountryCodeType"/>
+		<part name="visaGroup" type="typens:VisaGroupType"/>
+		<part name="permResident" type="typens:PermResidentType"/>
+		<part name="jurisdiction" type="typens:PostalCodeType"/>
+	</message>
+	
+	<message name="doGetVisaRequirementsResponse">
+		<part name="visaRequirements" type="typens:VisaRequirementsArrayType"/>
+	</message>
+	
+	<message name="doGetVisaTypesRequest">
+		<part name="residence" type="typens:CountryCodeType"/>
+		<part name="country" type="typens:CountryCodeType"/>
+		<part name="citizenship" type="typens:CountryCodeType"/>
+		<part name="visaGroup" type="typens:VisaGroupType"/>
+		<part name="permResident" type="typens:PermResidentType"/>
+		<part name="jurisdiction" type="typens:PostalCodeType"/>
+	</message>
+	
+	<message name="doGetVisaTypesResponse">
+		<part name="visaTypes" type="typens:VisaTypesArrayType"/>
+	</message>
+	
+	<message name="doGetProcessingTimesRequest">
+		<part name="residence" type="typens:CountryCodeType"/>
+		<part name="country" type="typens:CountryCodeType"/>
+		<part name="citizenship" type="typens:CountryCodeType"/>
+		<part name="visaGroup" type="typens:VisaGroupType"/>
+		<part name="visaType" type="xsd:integer"/>
+		<part name="permResident" type="typens:PermResidentType"/>
+		<part name="jurisdiction" type="typens:PostalCodeType"/>
+	</message>
+	
+	<message name="doGetProcessingTimesResponse">
+		<part name="processingTimes" type="typens:ProcessingTimesArrayType"/>
+	</message>
+	
+	<portType name="VisaHQTravelServicePort">
+		<operation name="doGetCountries">
+			<input message="typens:doGetCountriesRequest"/>
+			<output message="typens:doGetCountriesResponse"/>
+		</operation>
+		
+		<operation name="doGetCountry">
+			<input message="typens:doGetCountryRequest"/>
+			<output message="typens:doGetCountryResponse"/>
+		</operation>
+		
+		<operation name="doGetVisaGroups">
+			<input message="typens:doGetVisaGroupsRequest"/>
+			<output message="typens:doGetVisaGroupsResponse"/>
+		</operation>
+		
+		<operation name="doGetNotRequiredInfo">
+			<input message="typens:doGetNotRequiredInfoRequest"/>
+			<output message="typens:doGetNotRequiredInfoResponse"/>
+		</operation>
+		
+		<operation name="doGetVisaRequired">
+			<input message="typens:doGetVisaRequiredRequest"/>
+			<output message="typens:doGetVisaRequiredResponse"/>
+		</operation>
+		
+		<operation name="doGetVisaRequirements">
+			<input message="typens:doGetVisaRequirementsRequest"/>
+			<output message="typens:doGetVisaRequirementsResponse"/>
+		</operation>
+		
+		<operation name="doGetVisaTypes">
+			<input message="typens:doGetVisaTypesRequest"/>
+			<output message="typens:doGetVisaTypesResponse"/>
+		</operation>
+		
+		<operation name="doGetProcessingTimes">
+			<input message="typens:doGetProcessingTimesRequest"/>
+			<output message="typens:doGetProcessingTimesResponse"/>
+		</operation>
+	</portType>
+	
+	<binding name="VisaHQTravelBinding" type="typens:VisaHQTravelServicePort">
+		<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+		
+		<operation name="doGetCountries">
+			<soap:operation soapAction="urn:VisaHQTravelAction"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="doGetCountry">
+			<soap:operation soapAction="urn:VisaHQTravelAction"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="doGetVisaGroups">
+			<soap:operation soapAction="urn:VisaHQTravelAction"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="doGetNotRequiredInfo">
+			<soap:operation soapAction="urn:VisaHQTravelAction"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="doGetVisaRequired">
+			<soap:operation soapAction="urn:VisaHQTravelAction"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="doGetVisaRequirements">
+			<soap:operation soapAction="urn:VisaHQTravelAction"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="doGetVisaTypes">
+			<soap:operation soapAction="urn:VisaHQTravelAction"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+		
+		<operation name="doGetProcessingTimes">
+			<soap:operation soapAction="urn:VisaHQTravelAction"/>
+			<input>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</input>
+			<output>
+				<soap:body use="encoded" namespace="urn:VisaHQTravelService" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+			</output>
+		</operation>
+	</binding>
+
+	<service name="VisaHQTravelService">
+		<port name="VisaHQTravelPort" binding="typens:VisaHQTravelBinding">
+		     <soap:address location="https://www.visahq.com/soap_server.php"/>
+		</port>
+	</service>
+</definitions>
